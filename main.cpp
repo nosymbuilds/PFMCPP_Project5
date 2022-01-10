@@ -582,16 +582,22 @@ int main()
     // this->
     std::cout << "The " << roland.name << " has " << roland.presets << " presets." << std::endl;
     roland.print();
+
     std::cout << "The " << rolandMic.name << " is a " << rolandMic.type << " type mic." << std::endl;
     rolandMic.print();
+
     std::cout << kateBush.name << "'s computer has " << kateBush.computer.amountOfRAM << "GB of RAM" << std::endl;
     kateBush.print();
+
     std::cout << "The safety rating of my " << myGarage.car.name << " is " << myGarage.car.safetyRating << std::endl;
     myGarage.print();
+
     std::cout << "The " << landRoverEngine.name << " engine has " << landRoverEngine.pistons << " pistons." << std::endl;
     landRoverEngine.print();
-    offRoad.print();
+
     std::cout << "The " << offRoad.name << " is manufactured by " << offRoad.manufacturer << std::endl;
+    offRoad.print();
+
     std::cout << "The name of this computer is " << mac.name << std::endl;
     mac.print();
 
