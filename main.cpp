@@ -12,8 +12,8 @@ write 3 UDTs below that EACH have:
         5 member variables
             the member variable names and types should be relevant to the work the UDT will perform.
             pick properties that can be represented with 'int float double bool char std::string'
-        3 member functions with an arbitrary number of parameters
-            give some of those parameters default values.
+        3 member functions with an arbitrary number of paamountOfRAMeters
+            give some of those paamountOfRAMeters default values.
         constructors that initialize some of these member variables
             the remaining member variables should be initialized in-class
         for() or while() loops that modify member variables
@@ -55,23 +55,23 @@ If you need inspiration for what to write, take a look at previously approved st
 /*
  UDT 1:
  */
- struct Computer
+struct Computer
 {
-    int RAM;
+    int amountOfRAM;
     std::string name;
     int year;
-    double processor = 2.2;
+    double processorPower = 2.2;
     float availableStorage = 106.73f;
 
 
-    Computer( int RAM_, std::string name_, int year_ );
+    Computer( int amountOfRAM_, std::string name_, int year_ );
     ~Computer();
-    void upgrade( bool freeUpgrade, int RAM, double processor );
+    void upgrade( bool freeUpgrade, int amountOfRAM, double processorPower );
     void storeData( float sizeOfData );
     void checkWarranty( int yearProduced );
 };
 
-Computer::Computer( int RAM_, std::string name_, int year_ ) : RAM(RAM_), name(name_), year(year_)
+Computer::Computer( int amountOfRAM_, std::string name_, int year_ ) : amountOfRAM(amountOfRAM_), name(name_), year(year_)
 {
     std::cout << "Computer object constructed" << std::endl;
 }
@@ -81,12 +81,12 @@ Computer::~Computer()
     std::cout << "Computer object destructed" << std::endl;
 }
 
-void Computer::upgrade( bool freeUpgrade = true, int newRAM = 64, double newProcessor = 3.5 )
+void Computer::upgrade( bool freeUpgrade = true, int newamountOfRAM = 64, double newprocessorPower = 3.5 )
 {
-    std::cout << name << " stats before the upgrade - " << "RAM: " << RAM << "GB" << " / Processor: " << processor << "Mhz" << std::endl;
-    RAM = newRAM;
-    processor = newProcessor;
-    std::cout << name << " stats after the upgrade - " << "RAM: " << RAM << "GB" << " / Processor: " << processor << "Mhz" << std::endl;
+    std::cout << name << " stats before the upgrade - " << "amountOfRAM: " << amountOfRAM << "GB" << " / processorPower: " << processorPower << "Mhz" << std::endl;
+    amountOfRAM = newamountOfRAM;
+    processorPower = newprocessorPower;
+    std::cout << name << " stats after the upgrade - " << "amountOfRAM: " << amountOfRAM << "GB" << " / processorPower: " << processorPower << "Mhz" << std::endl;
 
     if( freeUpgrade )
         std::cout << "The upgrades are complete. As you qualify for free upgrades you have not been charged" << std::endl;
@@ -234,7 +234,7 @@ void Car::Engine::firePiston()
 /*
  UDT 3:
  */
- struct Synth
+struct Synth
 {
     std::string name;
     int presets;
