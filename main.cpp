@@ -80,7 +80,7 @@ struct Computer
 {
     int amountOfRAM;
     std::string name;
-    int year = 1979;
+    int year;
     double processorPower = 2.2;
     float availableStorage = 106.73f;
 
