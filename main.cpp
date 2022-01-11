@@ -80,12 +80,12 @@ struct Computer
     double processorPower = 2.2;
     float availableStorage = 106.73f;
 
-
     Computer( int amountOfRAM_, std::string name_, int year_ );
     ~Computer();
     void upgrade( bool freeUpgrade, int amountOfRAM, double processorPower );
     void storeData( float sizeOfData );
     void checkWarranty( int yearProduced );
+    void print();
 };
 
 Computer::Computer( int amountOfRAM_, std::string name_, int year_ ) : amountOfRAM(amountOfRAM_), name(name_), year(year_)
@@ -131,6 +131,11 @@ void Computer::checkWarranty( int yearProduced )
         std::cout << "This " << name << " is not currently under warranty." << std::endl;
 }
 
+void Computer::print()
+{
+    std::cout << "The name of this computer is " << this->name << std::endl;
+}
+
 /*
  UDT 2:
  */
@@ -147,6 +152,7 @@ struct Car
     void drive( float distance );
     void service();
     void scrap( std::string exchangeType = "credit" );
+    void print();
  
     struct Engine
     {
@@ -161,6 +167,7 @@ struct Car
         void produceEnergy();
         void lubricateEngine(double availableOilInLitres = 0.9);
         void firePiston();
+        void print();
     };
 };
 
@@ -248,6 +255,17 @@ void Car::Engine::firePiston()
 
     std::cout << "All pistons firing!" << std::endl;
 }
+
+void Car::print()
+{
+    std::cout << "The " << this->name << " is manufactured by " << this->manufacturer << std::endl;
+}
+
+void Car::Engine::print()
+{
+    std::cout << "The " << this->name << " engine has " << this->pistons << " pistons." << std::endl;
+}
+
 /*
  UDT 3:
  */
@@ -264,6 +282,7 @@ struct Synth
     void outputMidi( int midiOutput = 1 );
     void loadPresets( std::string presetBankName = "All" );
     void loadEffects( int numOfEffects );
+    void print();
 
     struct Microphone
     {
@@ -278,6 +297,7 @@ struct Synth
         void record();
         void pitch( int semitones  );
         void power( bool on );
+        void print();
     };
 };
 
@@ -350,6 +370,16 @@ void Synth::Microphone::power( bool on )
         std::cout << "The " << name << " mic has been turned off" << std::endl;
 }
 
+void Synth::print()
+{
+    std::cout << "The " << this->name << " has " << this->presets << " presets." << std::endl;
+}
+
+void Synth::Microphone::print()
+{
+    std::cout << "The " << this->name << " is a " << this->type << " type mic." << std::endl;
+}
+
 /*
  new UDT 4:
  */
@@ -364,6 +394,7 @@ struct Musician
     ~Musician();
     void playSynth( int effects, std::string presets );
     void recordMidi( int channel );
+    void print();
 };
 
 Musician::Musician( std::string name_ ) : name(name_)
@@ -388,6 +419,11 @@ void Musician::recordMidi( int channel )
     synth.outputMidi( channel );
 }
 
+void Musician::print( )
+{
+       std::cout << this->name << "'s computer has " << this->computer.amountOfRAM << "GB of RAM" << std::endl;
+}
+
 /*
  new UDT 5:
  */
@@ -400,6 +436,7 @@ struct Garage
     ~Garage();
     void getInformation( std::string item );
     void clean( std::string item);
+    void print();
 };
 
 Garage::Garage()
@@ -450,6 +487,11 @@ void Garage::clean( std::string item )
     }
 }
 
+void Garage::print( )
+{
+   std::cout << "The safety rating of my " << this->car.name << " is " << this->car.safetyRating << std::endl;
+}
+
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
  Commit your changes by clicking on the Source Control panel on the left, entering a message, and click [Commit and push].
@@ -480,7 +522,7 @@ int main()
     Car offRoad { "Discovery", "Land Rover", 67343.12f } ;
     sports.drive( 32.4f );
     sports.service();
-    sports.scrap( "cash" );
+    sports.scrap( "cash" );   
     offRoad.drive( 1000.23f );
     offRoad.service();
     offRoad.safetyRating = 9;
@@ -505,6 +547,7 @@ int main()
     yamaha.outputMidi( 2 );
     yamaha.loadPresets( "String" );
     yamaha.loadEffects( 0 );  
+
     
     Synth::Microphone rolandMic { "Roland DR-50" };
     Synth::Microphone yamahaMic { "Roland YA-1" };
@@ -523,7 +566,6 @@ int main()
     brianEno.playSynth( 2 , "Pad" );
     kateBush.recordMidi( 1 );
     kateBush.playSynth( 0 , "Drum" );
-
     std::cout << std::endl;
 
     // UDT 5
@@ -535,6 +577,29 @@ int main()
     neighboursGarage.getInformation( "time machine" );
     neighboursGarage.getInformation( "pickle rick" );
     neighboursGarage.clean( "engine" );
+    std::cout << std::endl;
+
+    // this->
+    std::cout << "The " << roland.name << " has " << roland.presets << " presets." << std::endl;
+    roland.print();
+
+    std::cout << "The " << rolandMic.name << " is a " << rolandMic.type << " type mic." << std::endl;
+    rolandMic.print();
+
+    std::cout << kateBush.name << "'s computer has " << kateBush.computer.amountOfRAM << "GB of RAM" << std::endl;
+    kateBush.print();
+
+    std::cout << "The safety rating of my " << myGarage.car.name << " is " << myGarage.car.safetyRating << std::endl;
+    myGarage.print();
+
+    std::cout << "The " << landRoverEngine.name << " engine has " << landRoverEngine.pistons << " pistons." << std::endl;
+    landRoverEngine.print();
+
+    std::cout << "The " << offRoad.name << " is manufactured by " << offRoad.manufacturer << std::endl;
+    offRoad.print();
+
+    std::cout << "The name of this computer is " << mac.name << std::endl;
+    mac.print();
 
     std::cout << std::endl;
     std::cout << "good to go!" << std::endl;
