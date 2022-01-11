@@ -71,6 +71,8 @@ void someMemberFunction(const Axe& axe);
 
 
 #include <iostream>
+#include "LeakedObjectDetector.h"
+
 /*
  UDT 1:
  */
@@ -78,7 +80,7 @@ struct Computer
 {
     int amountOfRAM;
     std::string name;
-    int year;
+    int year = 1979;
     double processorPower = 2.2;
     float availableStorage = 106.73f;
 
@@ -88,6 +90,15 @@ struct Computer
     void storeData( float sizeOfData );
     void checkWarranty( int yearProduced );
     void print();
+
+    JUCE_LEAK_DETECTOR(Computer)
+};
+
+struct ComputerWrapper
+{
+    ComputerWrapper( Computer* ptr ) : pointerToComputer( ptr ) { }
+    ~ComputerWrapper() { delete pointerToComputer; }
+    Computer* pointerToComputer = nullptr;
 };
 
 Computer::Computer( int amountOfRAM_, std::string name_, int year_ ) : amountOfRAM(amountOfRAM_), name(name_), year(year_)
@@ -155,7 +166,7 @@ struct Car
     void service();
     void scrap( std::string exchangeType = "credit" );
     void print();
- 
+
     struct Engine
     {
         std::string name;
@@ -170,7 +181,25 @@ struct Car
         void lubricateEngine(double availableOilInLitres = 0.9);
         void firePiston();
         void print();
+
+        JUCE_LEAK_DETECTOR(Engine)
     };
+
+    JUCE_LEAK_DETECTOR(Car)
+};
+
+struct CarWrapper
+{
+    CarWrapper( Car* ptr ) : pointerToCar( ptr ) { }
+    ~CarWrapper(){ delete pointerToCar;}
+    Car* pointerToCar = nullptr; 
+};
+
+struct EngineWrapper
+{
+    EngineWrapper( Car::Engine* ptr ) : pointerToEngine( ptr ) { }
+    ~EngineWrapper(){ delete pointerToEngine;}
+    Car::Engine* pointerToEngine = nullptr; 
 };
 
 Car::Car( std::string name_, std::string manufacturer_, float mileage_ ) : name(name_), manufacturer(manufacturer_), mileage(mileage_)
@@ -300,7 +329,25 @@ struct Synth
         void pitch( int semitones  );
         void power( bool on );
         void print();
+
+        JUCE_LEAK_DETECTOR(Microphone)
     };
+
+    JUCE_LEAK_DETECTOR(Synth)
+};
+
+struct SynthWrapper
+{
+    SynthWrapper( Synth* ptr ) : pointerToSynth( ptr ) { }
+    ~SynthWrapper(){ delete pointerToSynth;}
+    Synth* pointerToSynth = nullptr; 
+};
+
+struct MicrophoneWrapper
+{
+    MicrophoneWrapper( Synth::Microphone* ptr ) : pointerToMicrophone( ptr ) { }
+    ~MicrophoneWrapper(){ delete pointerToMicrophone;}
+    Synth::Microphone* pointerToMicrophone = nullptr; 
 };
 
 Synth::Synth( std::string name_ ) : name(name_), presets(100), filters(3), effectsLoaded(0)
@@ -397,6 +444,15 @@ struct Musician
     void playSynth( int effects, std::string presets );
     void recordMidi( int channel );
     void print();
+
+    JUCE_LEAK_DETECTOR(Musician)
+};
+
+struct MusicianWrapper
+{
+    MusicianWrapper( Musician* ptr ) : pointerToMusician( ptr ) { }
+    ~MusicianWrapper(){ delete pointerToMusician;}
+    Musician* pointerToMusician = nullptr; 
 };
 
 Musician::Musician( std::string name_ ) : name(name_)
@@ -439,6 +495,15 @@ struct Garage
     void getInformation( std::string item );
     void clean( std::string item);
     void print();
+
+    JUCE_LEAK_DETECTOR(Garage)
+};
+
+struct GarageWrapper
+{
+    GarageWrapper( Garage* ptr ) : pointerToGarage( ptr ) { }
+    ~GarageWrapper(){ delete pointerToGarage;}
+    Garage* pointerToGarage = nullptr; 
 };
 
 Garage::Garage()
@@ -509,99 +574,98 @@ void Garage::print( )
 int main()
 {
     // UDT 1
-    Computer mac { 16, "macbook", 2019 };
-    Computer windows { 8, "notebook", 2022} ;
-    mac.checkWarranty( mac.year );
-    mac.upgrade( true, 32, 5.6 );
-    mac.storeData( 60.9f );
-    windows.checkWarranty( windows.year );
-    windows.upgrade( false, 16, 4.2);
-    windows.storeData( 1.246f );
+    ComputerWrapper mac( new Computer(16, "macbook", 2019) );
+    ComputerWrapper windows( new Computer(8, "notebook", 2022) );
+    mac.pointerToComputer->checkWarranty( mac.pointerToComputer->year );
+    mac.pointerToComputer->upgrade( true, 32, 5.6 );
+    mac.pointerToComputer->storeData( 60.9f );
+    windows.pointerToComputer->checkWarranty( windows.pointerToComputer->year );
+    windows.pointerToComputer->upgrade( false, 16, 4.2);
+    windows.pointerToComputer->storeData( 1.246f );
     std::cout << std::endl;
     
     // UDT 2
-    Car sports { "M5", "BMW", 10000.43f };
-    Car offRoad { "Discovery", "Land Rover", 67343.12f } ;
-    sports.drive( 32.4f );
-    sports.service();
-    sports.scrap( "cash" );   
-    offRoad.drive( 1000.23f );
-    offRoad.service();
-    offRoad.safetyRating = 9;
-    offRoad.scrap();
-    
-    Car::Engine bmwEngine { "S14", 4, 16, 2 } ;
-    Car::Engine landRoverEngine { "Td5", 2, 12, 1 } ;
-    bmwEngine.firePiston();
-    bmwEngine.lubricateEngine( 0.2 );
-    bmwEngine.produceEnergy();
-    landRoverEngine.firePiston();
-    landRoverEngine.lubricateEngine( 4.0 );
-    landRoverEngine.produceEnergy();
+    CarWrapper sports( new Car( "M5", "BMW", 10000.43f ));
+    CarWrapper offRoad( new Car( "Discovery", "Land Rover", 67343.12f ));
+    sports.pointerToCar->drive( 32.4f );
+    sports.pointerToCar->service();
+    sports.pointerToCar->scrap( "cash" );   
+    offRoad.pointerToCar->drive( 1000.23f );
+    offRoad.pointerToCar->service();
+    offRoad.pointerToCar->safetyRating = 9;
+    offRoad.pointerToCar->scrap();
+
+    EngineWrapper bmwEngine( new Car::Engine( "S14", 4, 16, 2 ) );
+    EngineWrapper landRoverEngine( new Car::Engine( "Td5", 2, 12, 1 ) );
+    bmwEngine.pointerToEngine->firePiston();
+    bmwEngine.pointerToEngine->lubricateEngine( 0.2 );
+    bmwEngine.pointerToEngine->produceEnergy();
+    landRoverEngine.pointerToEngine->firePiston();
+    landRoverEngine.pointerToEngine->lubricateEngine( 4.0 );
+    landRoverEngine.pointerToEngine->produceEnergy();
     std::cout << std::endl;
 
     // UDT 3
-    Synth roland { "Roland 808" };
-    Synth yamaha { "Yamaha DX7" };
-    roland.outputMidi();
-    roland.loadPresets();
-    roland.loadEffects( 2 );
-    yamaha.outputMidi( 2 );
-    yamaha.loadPresets( "String" );
-    yamaha.loadEffects( 0 );  
+    SynthWrapper roland( new Synth( "Roland 808" ));
+    SynthWrapper yamaha( new Synth( "Yamaha DX7" ));
+    roland.pointerToSynth->outputMidi();
+    roland.pointerToSynth->loadPresets();
+    roland.pointerToSynth->loadEffects( 2 );
+    yamaha.pointerToSynth->outputMidi( 2 );
+    yamaha.pointerToSynth->loadPresets( "String" );
+    yamaha.pointerToSynth->loadEffects( 0 );  
 
-    
-    Synth::Microphone rolandMic { "Roland DR-50" };
-    Synth::Microphone yamahaMic { "Roland YA-1" };
-    rolandMic.power( true );
-    rolandMic.record();
-    rolandMic.pitch( -3 );
-    yamahaMic.power( false );
-    yamahaMic.record();
-    yamahaMic.pitch( 6 );
+    MicrophoneWrapper rolandMic( new Synth::Microphone( "Roland DR-50" ) );
+    MicrophoneWrapper yamahaMic( new Synth::Microphone( "Yamaha YA-1" ) );
+    rolandMic.pointerToMicrophone->power( true );
+    rolandMic.pointerToMicrophone->record();
+    rolandMic.pointerToMicrophone->pitch( -3 );
+    yamahaMic.pointerToMicrophone->power( false );
+    yamahaMic.pointerToMicrophone->record();
+    yamahaMic.pointerToMicrophone->pitch( 6 );
     std::cout << std::endl;
     
     // UDT 4
-    Musician brianEno { "Brian Eno" };
-    Musician kateBush { "Kate Bush" };
-    brianEno.recordMidi( 2 );
-    brianEno.playSynth( 2 , "Pad" );
-    kateBush.recordMidi( 1 );
-    kateBush.playSynth( 0 , "Drum" );
+    MusicianWrapper brianEno( new Musician( "Brian Eno" ) );
+    MusicianWrapper kateBush( new Musician( "Kate Bush" ) );
+    brianEno.pointerToMusician->recordMidi( 2 );
+    brianEno.pointerToMusician->playSynth( 2 , "Pad" );
+    kateBush.pointerToMusician->recordMidi( 1 );
+    kateBush.pointerToMusician->playSynth( 0 , "Drum" );
     std::cout << std::endl;
 
     // UDT 5
-    Garage myGarage;
-    Garage neighboursGarage;
-    myGarage.getInformation( "car" );
-    myGarage.getInformation( "engine" );
-    myGarage.clean( "boat" );
-    neighboursGarage.getInformation( "time machine" );
-    neighboursGarage.getInformation( "pickle rick" );
-    neighboursGarage.clean( "engine" );
+    GarageWrapper myGarage( new Garage() );
+    GarageWrapper neighboursGarage( new Garage() );
+    myGarage.pointerToGarage->getInformation( "car" );
+    myGarage.pointerToGarage->getInformation( "engine" );
+    myGarage.pointerToGarage->clean( "boat" );
+    neighboursGarage.pointerToGarage->getInformation( "time machine" );
+    neighboursGarage.pointerToGarage->getInformation( "pickle rick" );
+    neighboursGarage.pointerToGarage->clean( "engine" );
     std::cout << std::endl;
 
     // this->
-    std::cout << "The " << roland.name << " has " << roland.presets << " presets." << std::endl;
-    roland.print();
+    std::cout << "The " << roland.pointerToSynth->name << " has " << roland.pointerToSynth->presets << " presets." << std::endl;
+    roland.pointerToSynth->print();
 
-    std::cout << "The " << rolandMic.name << " is a " << rolandMic.type << " type mic." << std::endl;
-    rolandMic.print();
+    std::cout << "The " << rolandMic.pointerToMicrophone->name << " is a " << rolandMic.pointerToMicrophone->type << " type mic." << std::endl;
+    rolandMic.pointerToMicrophone->print();
 
-    std::cout << kateBush.name << "'s computer has " << kateBush.computer.amountOfRAM << "GB of RAM" << std::endl;
-    kateBush.print();
+    std::cout << kateBush.pointerToMusician->name << "'s computer has " << kateBush.pointerToMusician->computer.amountOfRAM << "GB of RAM" << std::endl;
+    kateBush.pointerToMusician->print();
 
-    std::cout << "The safety rating of my " << myGarage.car.name << " is " << myGarage.car.safetyRating << std::endl;
-    myGarage.print();
+    std::cout << "The safety rating of my " << myGarage.pointerToGarage->car.name << " is " << myGarage.pointerToGarage->car.safetyRating << std::endl;
+    myGarage.pointerToGarage->print();
 
-    std::cout << "The " << landRoverEngine.name << " engine has " << landRoverEngine.pistons << " pistons." << std::endl;
-    landRoverEngine.print();
+    std::cout << "The " << landRoverEngine.pointerToEngine->name << " engine has " << landRoverEngine.pointerToEngine->pistons << " pistons." << std::endl;
+    landRoverEngine.pointerToEngine->print();
 
-    std::cout << "The " << offRoad.name << " is manufactured by " << offRoad.manufacturer << std::endl;
-    offRoad.print();
+    std::cout << "The " << offRoad.pointerToCar->name << " is manufactured by " << offRoad.pointerToCar->manufacturer << std::endl;
+    offRoad.pointerToCar->print();
 
-    std::cout << "The name of this computer is " << mac.name << std::endl;
-    mac.print();
+    std::cout << "The name of this computer is " << mac.pointerToComputer->name << std::endl;
+    mac.pointerToComputer->print();
 
     std::cout << std::endl;
     std::cout << "good to go!" << std::endl;
