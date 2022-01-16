@@ -1,8 +1,3 @@
-#include "Computer.h"
-#include "Car.h"
-#include "Synth.h"
-#include "Musician.h"
-#include "Garage.h"
 #include "Wrappers.h"
 
 ComputerWrapper::ComputerWrapper( Computer* ptr ) : pointerToComputer( ptr ) { }

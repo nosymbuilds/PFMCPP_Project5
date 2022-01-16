@@ -1,4 +1,9 @@
 #pragma once
+#include "Computer.h"
+#include "Car.h"
+#include "Synth.h"
+#include "Musician.h"
+#include "Garage.h"
 
 struct ComputerWrapper
 {
