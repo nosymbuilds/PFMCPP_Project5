@@ -43,12 +43,13 @@
  */
 
 #include <iostream>
+
+#include "Wrappers.h"
 #include "Computer.h"
 #include "Car.h"
 #include "Synth.h"
 #include "Musician.h"
 #include "Garage.h"
-#include "Wrappers.h"
 
 int main()
 {

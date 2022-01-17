@@ -1,5 +1,6 @@
 #pragma once
 
+#
 struct Computer;
 struct Car;
 struct Synth;
@@ -22,7 +23,7 @@ struct CarWrapper
 
 struct EngineWrapper
 {
-    EngineWrapper( Car::Engine* ptr );
+    EngineWrapper( Car::Engine* ptr ); FIXME: include the file that this nested type is defined in
     ~EngineWrapper();
     Car::Engine* pointerToEngine = nullptr; 
 };
@@ -36,7 +37,7 @@ struct SynthWrapper
 
 struct MicrophoneWrapper
 {
-    MicrophoneWrapper( Synth::Microphone* ptr );
+    MicrophoneWrapper( Synth::Microphone* ptr ); FIXME: include the file that this nested type is defined in
     ~MicrophoneWrapper();
     Synth::Microphone* pointerToMicrophone = nullptr; 
 };
